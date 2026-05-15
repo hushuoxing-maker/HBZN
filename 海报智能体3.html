@@ -23,6 +23,9 @@
             --shadow-card: 0 4px 28px rgba(0, 0, 0, 0.5);
             --transition-fast: 0.16s ease;
             --transition-smooth: 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+            --scrollbar-width: 6px;
+            --scrollbar-track: rgba(255, 255, 255, 0.03);
+            --scrollbar-thumb: rgba(255, 106, 0, 0.35);
         }
 
         * {
@@ -119,7 +122,7 @@
             -webkit-backdrop-filter: blur(14px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            padding: 18px 20px;
+            padding: 14px 16px;
             margin-bottom: 14px;
             box-shadow: var(--shadow-card);
             transition: var(--transition-smooth);
@@ -127,25 +130,35 @@
         .main-card:hover {
             border-color: rgba(255, 255, 255, 0.1);
         }
-        .section-title {
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1.1px;
-            color: #bcc8dd;
-            margin-bottom: 8px;
+
+        /* 折叠标题 */
+        .collapse-toggle {
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 7px;
-            text-transform: uppercase;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #bcc8dd;
+            user-select: none;
+            transition: color var(--transition-fast);
+            padding: 2px 0;
         }
-        .section-title .icon-dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 7px var(--accent);
+        .collapse-toggle:hover {
+            color: #fff;
         }
-        .section-title .badge-count {
+        .collapse-toggle .arrow-icon {
+            font-size: 0.75rem;
+            transition: transform var(--transition-fast);
+            display: inline-block;
+            color: var(--accent);
+            margin-right: 2px;
+        }
+        .collapse-toggle.open .arrow-icon {
+            transform: rotate(90deg);
+        }
+        .collapse-toggle .badge-count {
             font-size: 0.68rem;
             background: rgba(255, 106, 0, 0.16);
             color: #ff944d;
@@ -155,20 +168,70 @@
             letter-spacing: 0.4px;
             margin-left: auto;
         }
+        .collapse-toggle .scroll-hint {
+            font-size: 0.6rem;
+            color: #54637a;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 2px 7px;
+            border-radius: 8px;
+            letter-spacing: 0.3px;
+            margin-left: 6px;
+        }
+
+        .collapse-content {
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin 0.2s ease;
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+        .collapse-content.expanded {
+            max-height: 1200px;
+            opacity: 1;
+            margin-top: 10px;
+        }
+
+        /* 滚动容器 */
+        .scrollable-btn-area {
+            max-height: 320px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;
+            scroll-behavior: smooth;
+        }
+        .scrollable-btn-area::-webkit-scrollbar {
+            width: var(--scrollbar-width);
+        }
+        .scrollable-btn-area::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 10px;
+        }
+        .scrollable-btn-area::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+            transition: background var(--transition-fast);
+        }
+        .scrollable-btn-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 140, 60, 0.6);
+        }
+        .scrollable-btn-area {
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
 
         .btn-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 5px;
         }
         .btn-grid .tag-btn {
-            padding: 6px 10px;
-            border-radius: 16px;
+            padding: 5px 9px;
+            border-radius: 14px;
             border: 1.5px solid rgba(255, 255, 255, 0.12);
             background: rgba(255, 255, 255, 0.02);
             color: #a8b6cc;
             cursor: pointer;
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             letter-spacing: 0.3px;
             transition: all var(--transition-fast);
             white-space: nowrap;
@@ -194,7 +257,7 @@
         }
         .tag-btn.selected::after {
             content: ' ✓';
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             opacity: 0.85;
         }
 
@@ -409,41 +472,6 @@
             grid-column: 1 / -1;
         }
 
-        .collapse-toggle {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.9px;
-            color: #bcc8dd;
-            padding: 6px 0;
-            user-select: none;
-            transition: color var(--transition-fast);
-        }
-        .collapse-toggle:hover {
-            color: #fff;
-        }
-        .collapse-toggle .arrow {
-            transition: transform var(--transition-fast);
-            font-size: 0.65rem;
-            display: inline-block;
-        }
-        .collapse-toggle.open .arrow {
-            transform: rotate(90deg);
-        }
-        .collapse-content {
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            max-height: 0;
-            opacity: 0;
-        }
-        .collapse-content.expanded {
-            max-height: 1200px;
-            opacity: 1;
-        }
-
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.4rem;
@@ -460,15 +488,18 @@
                 font-size: 0.95rem;
             }
             .btn-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             }
             .tag-btn {
-                font-size: 0.7rem;
-                padding: 5px 8px;
-                border-radius: 14px;
+                font-size: 0.68rem;
+                padding: 4px 7px;
+                border-radius: 12px;
             }
             .main-card {
-                padding: 14px 12px;
+                padding: 12px 10px;
+            }
+            .scrollable-btn-area {
+                max-height: 260px;
             }
         }
     </style>
@@ -483,8 +514,10 @@
 
         <!-- 输入区 -->
         <div class="main-card">
-            <div class="section-title"><span class="icon-dot"></span>📝 核心信息输入</div>
-            <div class="input-row">
+            <div class="collapse-toggle" style="cursor:default; color:#bcc8dd; padding:0;">
+                <span style="color:var(--accent);">📝</span> 核心信息输入
+            </div>
+            <div class="input-row" style="margin-top:8px;">
                 <div class="input-group">
                     <label for="topicInput">🎯 海报需求 <span class="req">*</span></label>
                     <input id="topicInput" type="text" placeholder="例如：烤鱼促销海报、AI产品展示..." value="烤鱼">
@@ -510,39 +543,43 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
             <!-- 左列 -->
             <div>
-                <!-- 海报类型 -->
-                <div class="main-card" id="cardPosterType">
-                    <div class="collapse-toggle open" data-target="collapsePosterType">
-                        <span class="arrow">▶</span> 🎨 海报类型 <span class="badge-count">多选</span>
+                <!-- 海报类型（带滚动条） -->
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapsePosterType">
+                        <span class="arrow-icon">▶</span> 🎨 海报类型
+                        <span class="badge-count">下拉选择</span>
+                        <span class="scroll-hint">🖱️ 滑动查看更多</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapsePosterType">
-                        <div class="btn-grid" data-group="posterType"></div>
+                    <div class="collapse-content" id="collapsePosterType">
+                        <div class="scrollable-btn-area">
+                            <div class="btn-grid" data-group="posterType"></div>
+                        </div>
                     </div>
                 </div>
                 <!-- 节日节气 -->
-                <div class="main-card" id="cardFestival">
-                    <div class="collapse-toggle open" data-target="collapseFestival">
-                        <span class="arrow">▶</span> 🎊 节日节气 <span class="badge-count">多选</span>
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapseFestival">
+                        <span class="arrow-icon">▶</span> 🎊 节日节气 <span class="badge-count">下拉选择</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapseFestival">
+                    <div class="collapse-content" id="collapseFestival">
                         <div class="btn-grid" data-group="festival"></div>
                     </div>
                 </div>
                 <!-- 情绪氛围 -->
-                <div class="main-card" id="cardMoodAtmo">
-                    <div class="collapse-toggle open" data-target="collapseMoodAtmo">
-                        <span class="arrow">▶</span> 💫 情绪氛围 <span class="badge-count">多选</span>
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapseMoodAtmo">
+                        <span class="arrow-icon">▶</span> 💫 情绪氛围 <span class="badge-count">下拉选择</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapseMoodAtmo">
+                    <div class="collapse-content" id="collapseMoodAtmo">
                         <div class="btn-grid" data-group="moodAtmo"></div>
                     </div>
                 </div>
                 <!-- 高端商业 -->
-                <div class="main-card" id="cardHighEnd">
-                    <div class="collapse-toggle open" data-target="collapseHighEnd">
-                        <span class="arrow">▶</span> 💎 高端商业 <span class="badge-count">多选</span>
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapseHighEnd">
+                        <span class="arrow-icon">▶</span> 💎 高端商业 <span class="badge-count">下拉选择</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapseHighEnd">
+                    <div class="collapse-content" id="collapseHighEnd">
                         <div class="btn-grid" data-group="highEnd"></div>
                     </div>
                 </div>
@@ -550,29 +587,33 @@
             <!-- 右列 -->
             <div>
                 <!-- 目标用户 -->
-                <div class="main-card" id="cardTargetUser">
-                    <div class="collapse-toggle open" data-target="collapseTargetUser">
-                        <span class="arrow">▶</span> 👤 目标用户 <span class="badge-count">多选</span>
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapseTargetUser">
+                        <span class="arrow-icon">▶</span> 👤 目标用户 <span class="badge-count">下拉选择</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapseTargetUser">
+                    <div class="collapse-content" id="collapseTargetUser">
                         <div class="btn-grid" data-group="targetUser"></div>
                     </div>
                 </div>
-                <!-- 风格类型 -->
-                <div class="main-card" id="cardStyleType">
-                    <div class="collapse-toggle open" data-target="collapseStyleType">
-                        <span class="arrow">▶</span> 🎭 风格类型 <span class="badge-count">多选</span>
+                <!-- 风格类型（带滚动条） -->
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapseStyleType">
+                        <span class="arrow-icon">▶</span> 🎭 风格类型
+                        <span class="badge-count">下拉选择</span>
+                        <span class="scroll-hint">🖱️ 滑动查看更多</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapseStyleType">
-                        <div class="btn-grid" data-group="styleType"></div>
+                    <div class="collapse-content" id="collapseStyleType">
+                        <div class="scrollable-btn-area">
+                            <div class="btn-grid" data-group="styleType"></div>
+                        </div>
                     </div>
                 </div>
                 <!-- 颜色匹配 -->
-                <div class="main-card" id="cardColorMatch">
-                    <div class="collapse-toggle open" data-target="collapseColorMatch">
-                        <span class="arrow">▶</span> 🎨 颜色匹配 <span class="badge-count">多选</span>
+                <div class="main-card">
+                    <div class="collapse-toggle" data-target="collapseColorMatch">
+                        <span class="arrow-icon">▶</span> 🎨 颜色匹配 <span class="badge-count">下拉选择</span>
                     </div>
-                    <div class="collapse-content expanded" id="collapseColorMatch">
+                    <div class="collapse-content" id="collapseColorMatch">
                         <div class="btn-grid" data-group="colorMatch"></div>
                     </div>
                 </div>
@@ -585,7 +626,7 @@
             </button>
         </div>
 
-        <div class="stats-bar" id="statsBar">👆 输入海报需求，选择条件，点击按钮生成提示词</div>
+        <div class="stats-bar" id="statsBar">👆 输入海报需求，点击下拉选择条件，然后生成提示词</div>
         <div class="results-grid" id="resultsBox">
             <div class="empty-state">👆 输入海报需求与主标题，选择条件，点击按钮生成20组不重复提示词</div>
         </div>
@@ -753,13 +794,17 @@
                 document.querySelectorAll('.collapse-toggle').forEach(toggle => {
                     toggle.addEventListener('click', function() {
                         const targetId = this.getAttribute('data-target');
+                        if (!targetId) return;
                         const content = document.getElementById(targetId);
                         if (!content) return;
                         const isOpen = content.classList.contains('expanded');
-                        if (isOpen) { content.classList.remove('expanded');
-                            this.classList.remove('open'); } else { content.classList.add(
-                                'expanded');
-                            this.classList.add('open'); }
+                        if (isOpen) {
+                            content.classList.remove('expanded');
+                            this.classList.remove('open');
+                        } else {
+                            content.classList.add('expanded');
+                            this.classList.add('open');
+                        }
                     });
                 });
             }
@@ -832,6 +877,7 @@
             window.addEventListener('DOMContentLoaded', () => {
                 renderButtons();
                 initCollapse();
+                // 默认生成示例
                 generatePrompts();
             });
             window.generatePrompts = generatePrompts;
